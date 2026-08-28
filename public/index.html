@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security Architecture Review Agent</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128737;</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2 4 5.5v6c0 5 3.4 9.3 8 10.5 4.6-1.2 8-5.5 8-10.5v-6L12 2z"/>
+      <path class="brand-check" d="M8.5 12.2l2.4 2.4 4.6-5"/>
+    </svg>
+    <div>
+      <h1>Security Architecture Review Agent</h1>
+      <p>SAR Step 1 — review of submitted materials, run as the eight-agent use-case chain of the SAR Agentic AI MVP: evidence extraction, validation, control assessment across eight domains, candidate findings, human review gate</p>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <span id="keyBadge" class="badge badge-muted">checking key…</span>
+    <button id="settingsBtn" class="btn btn-ghost" type="button">Settings</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ===================== SETUP ===================== -->
+<section id="setupView" class="view">
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head">
+        <h2>1 &nbsp;Submit the architecture package <span class="optional">every zone is optional</span></h2>
+        <p>The six minimum requested inputs for a Security Architecture Review. Each zone takes a <strong>file</strong> or a <strong>document link</strong> — SharePoint, Confluence, a wiki page, anywhere the artifact lives. What the agent can read is assessed against good security architecture practice; anything left empty is reported as a missing input with a priority. Neither stops the review from running. PNG, JPEG, WebP, GIF, PDF, or text formats (Markdown, JSON, YAML, XML, .drawio, Mermaid, Terraform). Office files should be exported to PDF first.</p>
+        <p class="callout-warn"><strong>Links are recorded, not opened.</strong> The agent runs in your browser and has no access to your SharePoint session, so it cannot fetch a link's contents. A link is logged in the Evidence Source Register exactly as you paste it and the input is assessed as <em>not provided</em> — the same as leaving the zone empty. Upload the file itself if you want it assessed.</p>
+      </div>
+
+      <div class="dropzones">
+        <div class="dropzone" data-category="architecture">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">1</div>
+          <div class="dz-icon">◫</div>
+          <div class="dz-title">Architecture Diagram</div>
+          <div class="dz-hint">Components, layers, how they are arranged</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="dropzone" data-category="dfd">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">2</div>
+          <div class="dz-icon">⇉</div>
+          <div class="dz-title">Data Flow Diagram</div>
+          <div class="dz-hint">Transaction flow or equivalent — how data moves</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="dropzone" data-category="hosting">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">3</div>
+          <div class="dz-icon">▣</div>
+          <div class="dz-title">Hosting / Deployment Model</div>
+          <div class="dz-hint">Cloud, on-prem, hybrid, SaaS; regions; runtime</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="dropzone" data-category="integrations">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">4</div>
+          <div class="dz-icon">⇄</div>
+          <div class="dz-title">Integrations &amp; Dependencies</div>
+          <div class="dz-hint">Partner APIs, IdPs, payment providers, SaaS, SDKs</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="dropzone" data-category="environments">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">5</div>
+          <div class="dz-icon">▤</div>
+          <div class="dz-title">Environment Scope</div>
+          <div class="dz-hint">Prod, pre-prod, UAT, dev, DR — and their separation</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+
+        <div class="dropzone" data-category="identity">
+          <input type="file" multiple hidden accept="image/*,.pdf,.txt,.md,.json,.yaml,.yml,.xml,.drawio,.puml,.mmd,.tf">
+          <div class="dz-num">6</div>
+          <div class="dz-icon">⚿</div>
+          <div class="dz-title">Identity &amp; Access Approach</div>
+          <div class="dz-hint">End users, services, admins, external actors</div>
+          <ul class="dz-files"></ul>
+          <label class="dz-link">
+            <span class="dz-link-label">or link it</span>
+            <input type="url" class="dz-link-input" placeholder="https://…sharepoint.com/…" spellcheck="false" autocomplete="off">
+          </label>
+        </div>
+      </div>
+
+      <p id="uploadError" class="inline-error" hidden></p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>2 &nbsp;Intake record <span class="optional">every field is optional</span></h2>
+        <p>The SAR request and solution metadata (SRC-01, SRC-02). These drive the intake determination — whether a review is indicated, at what depth, and how the solution classifies. Anything left blank is treated as not stated, and the review says so rather than guessing.</p>
+      </div>
+
+      <div class="form">
+        <label>
+          <span>Application / solution name</span>
+          <input id="ctxName" type="text" placeholder="Acme Payments Portal">
+        </label>
+        <label>
+          <span>What triggered this review?</span>
+          <select id="ctxChangeType">
+            <option value="">Not stated</option>
+            <option value="New build">New build or first release</option>
+            <option value="Material change">Material change to an existing solution</option>
+            <option value="Periodic review">Periodic review of an existing solution</option>
+            <option value="Vendor onboarding">Vendor or third-party onboarding</option>
+            <option value="Migration">Migration or re-platform</option>
+          </select>
+        </label>
+        <label>
+          <span>Delivery model</span>
+          <select id="ctxDeliveryModel">
+            <option value="">Not stated</option>
+            <option value="Custom build">Custom build</option>
+            <option value="Vendor SaaS">Vendor SaaS</option>
+            <option value="COTS deployed in-house">COTS deployed in-house</option>
+            <option value="Hybrid">Hybrid</option>
+          </select>
+        </label>
+        <label>
+          <span>Internet facing?</span>
+          <select id="ctxInternetFacing">
+            <option value="">Not stated</option>
+            <option value="Yes">Yes — reachable from the public internet</option>
+            <option value="No">No — internal only</option>
+            <option value="Partially">Partially — some components exposed</option>
+          </select>
+        </label>
+        <label class="full">
+          <span>What does the solution do?</span>
+          <textarea id="ctxPurpose" rows="2" placeholder="Customer-facing portal for scheduling payments and viewing statements."></textarea>
+        </label>
+        <label>
+          <span>Hosting / deployment model</span>
+          <input id="ctxHosting" type="text" placeholder="AWS EKS, eu-west-1 and eu-west-2, containers">
+        </label>
+        <label>
+          <span>Environment scope for this review</span>
+          <input id="ctxEnvironments" type="text" placeholder="Production and UAT; UAT holds masked data">
+        </label>
+        <label>
+          <span>Integrations &amp; third-party dependencies</span>
+          <input id="ctxIntegrations" type="text" placeholder="Stripe, Okta, Salesforce, internal ledger API">
+        </label>
+        <label>
+          <span>Identity &amp; access approach</span>
+          <input id="ctxIdentity" type="text" placeholder="Okta OIDC for customers; AWS IAM roles for services">
+        </label>
+        <label>
+          <span>Actors &amp; user population</span>
+          <input id="ctxUsers" type="text" placeholder="~50k external customers, 200 internal admins, 3 partner systems">
+        </label>
+        <label>
+          <span>Data sensitivity</span>
+          <input id="ctxDataSensitivity" type="text" placeholder="PII, card data, bank account numbers">
+        </label>
+        <label>
+          <span>Business criticality</span>
+          <select id="ctxCriticality">
+            <option value="">Not stated</option>
+            <option value="Critical">Critical — outage stops the business</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </label>
+        <label>
+          <span>Regulatory / policy context</span>
+          <input id="ctxRegulatory" type="text" placeholder="PCI DSS, GDPR, SOC 2, internal security standard">
+        </label>
+        <label class="full">
+          <span>Anything else the reviewer should know?</span>
+          <textarea id="ctxNotes" rows="2" placeholder="The DFD is a year old and predates the move to the new gateway."></textarea>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="runbar">
+    <div class="runbar-info">
+      <span id="fileCount">No files added yet</span>
+    </div>
+    <button id="demoBtn" class="btn btn-ghost" type="button" title="Render a built-in example report. Makes no API call and costs nothing.">
+      View sample report
+    </button>
+    <button id="analyzeBtn" class="btn btn-primary btn-lg" type="button">
+      Run architecture review
+    </button>
+  </div>
+</section>
+
+<!-- ===================== PROGRESS ===================== -->
+<section id="progressView" class="view" hidden>
+  <div class="card progress-card">
+    <div class="spinner"></div>
+    <h2 id="progressTitle">Reviewing the submitted materials</h2>
+    <p id="progressMessage">Starting…</p>
+
+    <ol class="phases">
+      <li data-phase="preparing"><span></span><b>INTK · EXTR</b> — classifying the solution, extracting evidence</li>
+      <li data-phase="analyzing"><span></span><b>VALD · KNOW</b> — validating evidence, establishing requirements</li>
+      <li data-phase="writing"><span></span><b>CTRL · GAPF</b> — assessing eight domains, raising candidate findings</li>
+      <li data-phase="assembling"><span></span><b>RPTS</b> — assembling the report packages</li>
+    </ol>
+
+    <details id="thinkingBox" class="thinking">
+      <summary>Show the agent's reasoning <span id="thinkingCount"></span></summary>
+      <pre id="thinkingText"></pre>
+    </details>
+
+    <button id="cancelBtn" class="btn btn-ghost" type="button">Cancel</button>
+  </div>
+</section>
+
+<!-- ===================== REPORT ===================== -->
+<section id="reportView" class="view" hidden>
+
+  <div class="report-actions no-print">
+    <button id="backBtn" class="btn btn-ghost" type="button">← New review</button>
+    <div class="spacer"></div>
+    <span id="metaBadge" class="badge badge-muted"></span>
+    <button id="jsonBtn" class="btn" type="button">Download JSON</button>
+    <button id="fullPdfBtn" class="btn" type="button"
+            title="The working record: intake, evidence, control assessment by domain, conflicts, use-case coverage and the human review gate.">Review pack PDF</button>
+    <button id="findingsPdfBtn" class="btn btn-primary" type="button"
+            title="For the delivery team: the candidate findings, the open questions they depend on, and the next steps.">Findings PDF</button>
+  </div>
+
+  <div id="report" class="report"></div>
+</section>
+
+</main>
+
+<!-- ===================== SETTINGS ===================== -->
+<dialog id="settingsDialog" class="dialog">
+  <form method="dialog">
+    <h2>Settings</h2>
+
+    <label class="dlg-field">
+      <span>Anthropic API key</span>
+      <input id="apiKeyInput" type="password" placeholder="sk-ant-…" autocomplete="off">
+      <small>Only needed if <code>ANTHROPIC_API_KEY</code> is not set in the server's environment. Stored in this browser tab only and sent solely to your local server.</small>
+    </label>
+
+    <label class="dlg-field">
+      <span>Model</span>
+      <select id="modelSelect">
+        <option value="claude-opus-4-6">Claude Opus 4.6 — deepest analysis (recommended)</option>
+        <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — faster, cheaper</option>
+      </select>
+    </label>
+
+    <label class="dlg-field">
+      <span>Effort</span>
+      <select id="effortSelect">
+        <option value="max">Max — most thorough, slowest</option>
+        <option value="high" selected>High — default</option>
+        <option value="medium">Medium — balanced</option>
+        <option value="low">Low — quick pass</option>
+      </select>
+    </label>
+
+    <menu>
+      <button class="btn btn-primary" value="save">Save</button>
+    </menu>
+  </form>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
